@@ -100,6 +100,24 @@ func NewFsQuery() (fsq *FsQuery) {
 	return
 }
 
+// Higher-Level Helper Functions
+func (q *FsQuery) AddUserEmail(email string) {
+	q.AddUserCriterion(FsCriterion{
+		Field: UserEmail,
+		Op:    OpEquals,
+		Value: []string{email},
+	})
+}
+
+func (q *FsQuery) AddClickedSelector(selector string) {
+	q.AddEventCriteria(ClickEventCriterion, FsCriterion{
+		Field: ClickChangeCssSelector,
+		Op:    OpEquals,
+		Value: []string{selector},
+	})
+}
+
+// Low-Level Criteria Construction Functions
 func (q *FsQuery) AddEventCriteria(criteria ...FsCriterion) {
 	q.EventCriteria = append(q.EventCriteria, criteria)
 }
