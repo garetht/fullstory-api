@@ -7,6 +7,7 @@ import (
 
 	"github.com/franela/goreq"
 	"github.com/garetht/fullstory-api/query"
+	"github.com/garetht/fullstory-api/user"
 )
 
 type API struct {
@@ -38,13 +39,13 @@ func (a *API) Init(username string, password string) {
 	}
 }
 
-func (a *API) UserQuery(q *query.FsQuery) FsUsers {
+func (a *API) UserQuery(q *query.FsQuery) (users user.FsUsers) {
 	resp := a.post(fsSearchUser, q)
 
-	users := FsUsers{}
+	users = user.FsUsers{}
 	resp.Body.FromJsonTo(&users)
 
-	return users
+	return
 }
 
 func (a *API) post(endpoint string, data interface{}) (resp *goreq.Response) {
