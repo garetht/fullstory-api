@@ -15,11 +15,10 @@ type API struct {
 }
 
 const (
-	fsBase       = "https://www.fullstory.com"
-	fsLogin      = "/loginrequest"
-	fsSearchUser = "/searchUsers?limit=25&start=0&tz=America/New_York"
-	fsCookieKey  = "fs_session"
-	fsCsrfKey    = "csrftoken"
+	fsBase      = "https://www.fullstory.com"
+	fsLogin     = "/loginrequest"
+	fsCookieKey = "fs_session"
+	fsCsrfKey   = "csrftoken"
 )
 
 func (a *API) Init(username string, password string) {
@@ -40,7 +39,7 @@ func (a *API) Init(username string, password string) {
 }
 
 func (a *API) UserQuery(q *query.FsQuery) (users user.FsUsers) {
-	resp := a.post(fsSearchUser, q)
+	resp := a.post(user.Endpoint, q)
 
 	users = user.FsUsers{}
 	resp.Body.FromJsonTo(&users)

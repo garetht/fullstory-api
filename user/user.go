@@ -1,6 +1,6 @@
 package user
 
-const fsUserEndpoint = "/searchUsers"
+const Endpoint = "/searchUsers?limit=25&start=0&tz=America/New_York"
 
 type FsUsers struct {
 	MatchingUsers int

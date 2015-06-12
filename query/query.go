@@ -1,11 +1,5 @@
 package query
 
-const (
-	OP_IS          = "=="
-	OP_IS_NOT      = "!="
-	OP_STARTS_WITH = "><"
-)
-
 type FsCriterion struct {
 	Field string
 	Op    string
