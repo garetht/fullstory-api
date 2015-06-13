@@ -6,6 +6,8 @@ import (
 	"net/url"
 	"strings"
 
+	"time"
+
 	"github.com/franela/goreq"
 	"github.com/garetht/fullstory-api/query"
 	"github.com/garetht/fullstory-api/session"
@@ -84,6 +86,38 @@ func (a *API) SessionQuery(c Config) (sessions session.FsSessions) {
 	resp.Body.FromJsonTo(&sessions)
 
 	return
+}
+
+func (a *API) MultiUserSessionQuery(users []user.FsUser) (responses []session.FsSessions) {
+	ch := make(chan session.FsSessions)
+	responses = []session.FsSessions{}
+
+	for _, user := range users {
+		go func(id string) {
+			conf := Config{
+				Options: map[string]string{
+					"userId": id,
+				},
+			}
+			resp := a.SessionQuery(conf)
+			ch <- resp
+		}(user.IndivId)
+	}
+
+	for {
+		select {
+		case r := <-ch:
+			responses = append(responses, r)
+			if len(responses) == len(users) {
+				return responses
+			}
+		case <-time.After(8 * time.Second):
+			fmt.Println("MultiUserSessionQuery timed out!")
+			return
+		}
+	}
+
+	return responses
 }
 
 func (a *API) post(endpoint string, data interface{}, queryParams url.Values) (resp *goreq.Response) {
